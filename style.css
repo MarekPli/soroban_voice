@@ -1,0 +1,38 @@
+.container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    background-color: blanchedalmond;
+}
+
+.container div {
+    /* color: white; */
+    /* vertical-align: middle; */
+    height: 60px;
+    width: 200px;
+
+    background-color: wheat;
+    text-align: center;
+    /* line-height: 100px; */
+    font-size: 16px;
+    margin: 5px;
+    /* padding-top: 10px; */
+    border-radius: 50px;
+    border-style: outset;
+}
+
+.container .greater {
+    font-size: 3em;
+    display: inline;
+    border-style: initial;
+}
+
+#my {
+    display: block;
+    width: 30%;
+    height: 50px;
+    background-color: aquamarine;
+    margin: 10% 30%;
+    font-size: 40px;
+    text-align: center;
+}

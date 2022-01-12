@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Czytanie liczby</title>
+
+
+    <script>
+        let idxInterval, sum, interval, intervalCycle, x;
+        let buffer;
+        let mydiv, n, rr;
+        let howmany = 8;
+        let myTime = 4000;
+        let wasMinus;
+        const maxTimes = 8;
+        let moscibrod = 0;
+        let idxCycle;
+        let semaphore = true;
+        const maxCycle = 8;
+        const audiovolume = 0.3;
+        const dirname = 'liczby/';
+        let tableNr = [];
+
+        function myRandomNumber(range) {
+            n = Math.floor(Math.random() * range) + 1;
+            sign = Math.floor(Math.random() * 2);
+            if (sign) n = -n;
+            return n;
+        }
+
+        function readNr() {
+            playNr();
+            var m = n % 10;
+            if (m == n || m == 0) {
+                clearInterval(interval);
+                semaphore = true;
+            }
+            else n = m;
+        }
+
+        function playCycle(nr, repeat = false) {
+            if (!semaphore) return;
+            if (idxCycle < howmany) {
+                // n = myRandomNumber(nr);
+                if (!repeat)
+                    do {
+                        n = myRandomNumber(nr);
+                    } while (n + sum < 0 || n + sum > nr || buffer == -n);
+                else n = tableNr[idxCycle];
+                document.getElementById('my').innerHTML = n;
+                sum += n;
+                buffer = n;
+                if (!repeat) tableNr.push(n);
+                console.log(n + ' suma: ' + sum);
+                semaphore = false;
+                // if (n < 0) {
+                //     playAudio('minus');
+                // }
+                // else if (idxCycle) {
+                //     playAudio('plus');
+                // }
+                readNumberToAudio(idxCycle);
+
+
+                // interval = setInterval(readNr, myTime / 4);
+                idxCycle++;
+            }
+            else {
+                document.getElementById('my').innerHTML = "Wynik: " + sum;
+                n = sum;
+                clearInterval(intervalCycle);
+                readNumberToAudio('wynik');
+                console.log(tableNr);
+            }
+        }
+
+        function playAudio(name) {
+            var fname = dirname + name + '.mp3';
+            var audio = new Audio(fname);
+
+            audio.volume = audiovolume;
+            audio.onended = function () {
+                rr = audio.duration;
+            }
+
+            audio.play();
+            console.log("My duration: " + rr);
+            return rr;
+        }
+
+        function prepareTableAudios(tab) {
+            for (let i = 0; i < tab.length; i++) {
+                if (i < tab.length - 1) {
+                    tab[i].onended = () =>
+                        tab[i + 1].play();
+
+                }
+                else {
+                    tab[i].onended = function () {
+                        semaphore = true;
+                    }
+                }
+            }
+        }
+        function makeTableAudios(tab) {
+            const t = [];
+            for (let i = 0; i < tab.length; i++) {
+                const audio = new Audio(tab[i]);
+                audio.volume = audiovolume;
+                t.push(audio);
+            }
+            return t;
+        }
+
+        function playManyAudios() {
+            let name = 'liczba01'
+            const fname = dirname + name + '.mp3';
+            let fname2 = dirname + 'liczba02' + '.mp3';
+            let fname3 = dirname + 'liczba03' + '.mp3';
+            let fname4 = dirname + 'liczba04' + '.mp3';
+            let tab = [];
+            tab.push(fname);
+            tab.push(fname2);
+            tab.push(fname3);
+            tab.push(fname4);
+            tab = makeTableAudios(tab)
+            prepareTableAudios(tab);
+            tab[0].play();
+        }
+
+        function nrToMp3(txt, linkNr = false) {
+            let r = dirname;
+            if (txt == 'wynik' || txt == 'minus' || txt == 'plus')
+                r += txt;
+            else if (txt >= 1000) {
+                let mytys = Math.floor(txt / 1000)
+                console.log("tysiące: " + mytys);
+                if (mytys == 1)
+                    r += 'tys_c_alone';
+                else if (mytys > 1 && mytys < 5)
+                    r += 'tys_ce_alone';
+                else
+                    r += 'tys_cy_alone';
+            }
+            else if (txt >= 100) {
+                if (txt % 100 == 0)
+                    r += 'liczba' + Math.floor(txt / 100) + '00';
+                else
+                    r += 'liczba' + Math.floor(txt / 100) + '01';
+            }
+            else if (txt >= 10) {
+                if (txt % 10 == 0)
+                    r += 'liczba' + Math.floor(txt / 10) + '0';
+                else if (txt < 20 && txt > 10) {
+                    r += 'liczba' + txt;
+                }
+                else
+                    r += 'aliczba' + Math.floor(txt / 10) + '1';
+            }
+            else if (linkNr)
+                r += 'aliczba0' + txt;
+            else if (txt != 0) {
+
+                r += 'liczba0' + txt;
+                // console.log("Zamiana " + txt + ' na ' + r);
+            }
+            else {
+                r += 'zero';
+            }
+            return r + '.mp3';
+        }
+
+        function readNumberToAudio(param) {
+            let tab = [];
+            let nr = Math.abs(n);
+            if (param == 'wynik') {
+                tab.push(nrToMp3('wynik'));
+            }
+            if (n == 0) tab.push(nrToMp3(0));
+            if (n < 0) tab.push(nrToMp3('minus'));
+
+            else if (param != 0 && param != 'wynik') tab.push(nrToMp3('plus'));
+            if (nr >= 1000) {
+                let m = Math.floor(nr / 1000);
+                if (m > 1)
+                    tab.push(nrToMp3(m, true))
+                tab.push(nrToMp3(nr));
+                nr = nr % 1000;
+            }
+            if (nr >= 100) {
+                tab.push(nrToMp3(nr));
+                nr = nr % 100;
+            }
+
+            if (nr >= 10) {
+                tab.push(nrToMp3(nr));
+                if (nr < 20 && nr > 10)
+                    nr = 0;
+                else
+                    nr = nr % 10;
+            }
+            if (nr % 10) {
+                tab.push(nrToMp3((nr)));
+            }
+            tab = makeTableAudios(tab)
+            prepareTableAudios(tab);
+            tab[0].play();
+        }
+
+        function playNr() {
+            m = Math.abs(n);
+            if (m >= 10) {
+                m = Math.floor(m / 10);
+                fname = 'liczba' + m + '0';
+            }
+            else fname = 'liczba0' + Math.abs(m);
+            playAudio(fname);
+        }
+
+        function printMe(nr, repeat = false) {
+            idxCycle = sum = 0;
+            wasMinus = false;
+            if (!repeat) tableNr = [];
+            if (!repeat || tableNr.length) {
+                document.getElementById('my').innerHTML = "Zaczynamy...";
+                intervalCycle = setInterval(playCycle, myTime, nr, repeat);
+            }
+            else {
+                document.getElementById('my').innerHTML = "Nie ma czego powtarzać!";
+                semaphore = true;
+            }
+
+        }
+
+        function decodeNr(nr) {
+            let q, r, result = 0, counter = 0;
+            nr = 9047729;
+            while (nr) {
+                // q = Math.floor(nr / 10);
+                r = nr % 10;
+                if (r < 5) r = 0;
+                else r = 1;
+                result += (10 ** counter) * r;
+                console.log('nr = q + r: ' + nr + ' = ' + Math.floor(nr / 10) + ' ' + r);
+                nr = Math.floor(nr / 10);
+                counter++;
+            }
+            return result;
+        }
+        function printNumber(e) {
+            // c = e.keyCode;
+            if (!semaphore) return;
+            buffer = 0;
+            c = String.fromCharCode(e.keyCode);
+            console.log("Naciśnięto klawisz " + c);
+            if (c == 'q' || c == 'Q') {
+                // myTime = 4000;
+                howmany = 6;
+                printMe(9);
+
+            }
+            else if (c == 'w' || c == 'W') {
+                // myTime = 4000;
+                howmany = 4
+                printMe(99);
+            }
+            else if (c == 'e' || c == 'E')
+                printMe(11999);
+            else if (c == 'r' || c == 'R')
+                printMe(19);
+            else if (c == '1') {
+                console.log(decodeNr(234));
+            }
+            else if (c == '2')
+                playManyAudios();
+            else if (c == 'p' || c == 'P')
+                printMe(0, true);
+        }
+
+    </script>
+</head>
+
+<body onkeypress="printNumber(event)">
+    <h1 style="text-align: center;">Dodawanie liczb na liczydle</h1>
+    <div class="container">
+        <div>
+            <div class="greater">q</div>
+            liczby jednocyfrowe
+        </div>
+        <div>
+            <div class="greater">w</div>
+            liczby do stu
+        </div>
+        <div>
+            <div class="greater">e</div>
+            liczby do 12.000
+        </div>
+        <div>
+            <div class="greater">p</div>
+            powtórka poprzedniego
+        </div>
+    </div>
+    <div id="my"></div>
+    <div id="audio"></div>
+
+</body>
+
+</html>
