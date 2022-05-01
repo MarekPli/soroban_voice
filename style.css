@@ -22,10 +22,53 @@
 }
 
 .container .greater {
-    font-size: 3em;
+    font-size: 2.5em;
+    text-transform: uppercase;
     display: inline;
     border-style: initial;
 }
+
+.input-hidden {
+    display: block;
+    position: absolute;
+    top: 0;
+    color: transparent;
+
+}
+
+.input-hidden:hover {
+    color: inherit;
+}
+
+#howmaner {
+
+    right: 0%;
+}
+
+#audios {
+    top: inherit;
+    bottom: 0%;
+}
+
+
+.tim {
+    color: transparent;
+    border-color: transparent;
+    font-size: 1em;
+    width: 1;
+    outline: none;
+    appearance: none;
+}
+
+.tim:hover {
+    color: inherit;
+    border-color: inherit;
+}
+
+.tim:not(:hover) {
+    opacity: 0;
+}
+
 
 #my {
     display: block;

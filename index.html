@@ -14,14 +14,14 @@
         let buffer;
         let mydiv, n, rr;
         let howmany = 8;
-        let myTime = 4000;
+        let myTime = 8000;
         let wasMinus;
-        const maxTimes = 8;
         let moscibrod = 0;
         let idxCycle;
         let semaphore = true;
         const maxCycle = 8;
-        const audiovolume = 0.3;
+        // const audiovolume = 0.3;
+        let audiovolume = 0.1;
         const dirname = 'liczby/';
         let tableNr = [];
 
@@ -225,6 +225,9 @@
             idxCycle = sum = 0;
             wasMinus = false;
             if (!repeat) tableNr = [];
+            else {
+                howmany = tableNr.length
+            }
             if (!repeat || tableNr.length) {
                 document.getElementById('my').innerHTML = "Zaczynamy...";
                 intervalCycle = setInterval(playCycle, myTime, nr, repeat);
@@ -256,16 +259,25 @@
             if (!semaphore) return;
             buffer = 0;
             c = String.fromCharCode(e.keyCode);
+            myTime = document.getElementById('tim1').value * 1000
+            howmany = document.getElementById('howmany').value
+            audiovolume = "0." + document.getElementById('audio1').value
+            console.log(myTime)
             console.log("Naciśnięto klawisz " + c);
             if (c == 'q' || c == 'Q') {
                 // myTime = 4000;
-                howmany = 6;
+                // howmany = 6;
                 printMe(9);
 
             }
+            else if (c == 'l' || c == 'L') {
+                // myTime = 4000;
+                // howmany = 4
+                printMe(49);
+            }
             else if (c == 'w' || c == 'W') {
                 // myTime = 4000;
-                howmany = 4
+                // howmany = 4
                 printMe(99);
             }
             else if (c == 'e' || c == 'E')
@@ -286,10 +298,31 @@
 
 <body onkeypress="printNumber(event)">
     <h1 style="text-align: center;">Dodawanie liczb na liczydle</h1>
+    <div class="input-hidden">
+        <label>Czas:
+            <input type="number" class='tim' id="tim1" min="1" max="10" value="1">
+        </label>
+    </div>
+    <div class="input-hidden" id='howmaner'>
+        <label>
+            Elementów:
+            <input type="number" class='tim' id="howmany" min="2" max="10" value="4">
+        </label>
+    </div>
+    <div class="input-hidden" id='audios'>
+        <label>
+            Głośność:
+            <input type="number" class='tim' id="audio1" min="0" max="9" value="3">
+        </label>
+    </div>
     <div class="container">
         <div>
             <div class="greater">q</div>
             liczby jednocyfrowe
+        </div>
+        <div>
+            <div class="greater">l</div>
+            liczby do pięćdziesięciu
         </div>
         <div>
             <div class="greater">w</div>
