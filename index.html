@@ -230,6 +230,7 @@
             }
             if (!repeat || tableNr.length) {
                 document.getElementById('my').innerHTML = "Zaczynamy...";
+                playCycle(nr, repeat) // no waiting before starting
                 intervalCycle = setInterval(playCycle, myTime, nr, repeat);
             }
             else {
@@ -300,7 +301,7 @@
     <h1 style="text-align: center;">Dodawanie liczb na liczydle</h1>
     <div class="input-hidden">
         <label>Czas:
-            <input type="number" class='tim' id="tim1" min="1" max="10" value="1">
+            <input type="number" class='tim' id="tim1" min="1" max="60" value="4">
         </label>
     </div>
     <div class="input-hidden" id='howmaner'>
@@ -312,7 +313,7 @@
     <div class="input-hidden" id='audios'>
         <label>
             Głośność:
-            <input type="number" class='tim' id="audio1" min="0" max="9" value="3">
+            <input type="number" class='tim' id="audio1" min="0" max="9" value="2">
         </label>
     </div>
     <div class="container">
