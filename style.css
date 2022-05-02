@@ -41,13 +41,22 @@
 }
 
 #howmaner {
-
     right: 0%;
 }
 
 #audios {
     top: inherit;
     bottom: 0%;
+}
+
+#choices {
+    top: inherit;
+    bottom: 0%;
+    right: 0;
+}
+
+#choices1 {
+    width: 1;
 }
 
 

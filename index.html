@@ -13,8 +13,11 @@
         let idxInterval, sum, interval, intervalCycle, x;
         let buffer;
         let mydiv, n, rr;
-        let howmany = 8;
-        let myTime = 8000;
+        let howmany;
+        let choices;
+        let minNumber;
+        let is_minNumber;
+        let myTime;
         let wasMinus;
         let moscibrod = 0;
         let idxCycle;
@@ -49,7 +52,8 @@
                 if (!repeat)
                     do {
                         n = myRandomNumber(nr);
-                    } while (n + sum < 0 || n + sum > nr || buffer == -n);
+                    } while (n + sum < 0 || n + sum > nr || buffer == -n
+                        || is_minNumber && n + sum < minNumber);
                 else n = tableNr[idxCycle];
                 document.getElementById('my').innerHTML = n;
                 sum += n;
@@ -259,9 +263,13 @@
             // c = e.keyCode;
             if (!semaphore) return;
             buffer = 0;
+            is_minNumber = false;
             c = String.fromCharCode(e.keyCode);
             myTime = document.getElementById('tim1').value * 1000
             howmany = document.getElementById('howmany').value
+            choices = document.getElementById('choices1').value
+            minNumber = 10 ** (choices - 1)
+            choices = 10 ** choices - 1
             audiovolume = "0." + document.getElementById('audio1').value
             console.log(myTime)
             console.log("Naciśnięto klawisz " + c);
@@ -283,8 +291,11 @@
             }
             else if (c == 'e' || c == 'E')
                 printMe(11999);
-            else if (c == 'r' || c == 'R')
-                printMe(19);
+            else if (c == 'r' || c == 'R') {
+                is_minNumber = true
+
+                printMe(choices);
+            }
             else if (c == '1') {
                 console.log(decodeNr(234));
             }
@@ -314,6 +325,12 @@
         <label>
             Głośność:
             <input type="number" class='tim' id="audio1" min="0" max="9" value="2">
+        </label>
+    </div>
+    <div class="input-hidden" id='choices'>
+        <label>
+            Ile cyfr:
+            <input type="number" class='tim' id="choices1" min="0" max="14" value="2">
         </label>
     </div>
     <div class="container">

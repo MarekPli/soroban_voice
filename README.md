@@ -14,11 +14,12 @@ _Powtórka poprzedniego_ - uwzględniana jest aktualna czas i głośność, nato
 
 ## Pola niewidzialne
 
-Pola niewidzialne można ujrzeć, gdy się stanie myszą nad którymś z rogów okna (poza prawym dolnym).
+Pola niewidzialne można ujrzeć, gdy się stanie myszą nad którymś z rogów okna. Pozwalają one określić opcje polecenia.
 
 - _Czas_: określa liczbę sekund między jedną a drugą liczbą. Minimalny czas to 1 sekunda.
 - _Elementy_: tu się określa, ile elementów zawiera rachunek. Nie może być ich mniej niż 2.
-- _Głośność_: siła głosu odczytywanych numerów. Można ją ustawić jako 0, wtedy nic nie będzie słychać.
+- _Głośność_: siła głosu odczytywanych numerów. Można ustawić 0, wtedy nic nie będzie słychać.
+- _Ile cyf_: w razie wciśnięcia klawisza R (niewidzialne polecenie) wynikiem obliczeń, jak też pierwszą liczbą, będzie zawsze liczba o podanej ilości cyfr.
 
 ## Dostęp do programu
 
