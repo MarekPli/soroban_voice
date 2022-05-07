@@ -17,6 +17,7 @@
         let choices;
         let minNumber;
         let is_minNumber;
+        let is_bigFriends;
         let myTime;
         let wasMinus;
         let moscibrod = 0;
@@ -45,6 +46,22 @@
             else n = m;
         }
 
+        function toggleBigFriends(n, sum_old) {
+            if (sum_old && Math.abs(n) > 9) return false
+            if (sum_old >= 19 && n < 0) return true
+            let sum_new = sum_old + n
+            if (sum_old >= 10 && sum_new < 10) return true
+            if (sum_old < 10 && sum_new >= 10) return true
+            return false
+        }
+
+        function toggleBigFriends1(n, sum_old) {
+            if (sum_old && Math.abs(n) > 9) return false
+            let sum_new = sum_old + n
+            if (sum_old && sum_old % 10 > sum_new % 10) return true
+            return false
+        }
+
         function playCycle(nr, repeat = false) {
             if (!semaphore) return;
             if (idxCycle < howmany) {
@@ -53,7 +70,8 @@
                     do {
                         n = myRandomNumber(nr);
                     } while (n + sum < 0 || n + sum > nr || buffer == -n
-                        || is_minNumber && n + sum < minNumber);
+                    || is_minNumber && n + sum < minNumber
+                        || is_bigFriends && !toggleBigFriends(n, sum));
                 else n = tableNr[idxCycle];
                 document.getElementById('my').innerHTML = n;
                 sum += n;
@@ -74,11 +92,14 @@
                 idxCycle++;
             }
             else {
-                document.getElementById('my').innerHTML = "Wynik: " + sum;
-                n = sum;
+                setTimeout(() => {
+                    document.getElementById('my').innerHTML = "Wynik: " + sum;
+                    n = sum;
+                    readNumberToAudio('wynik');
+                    console.log(tableNr);
+                }
+                    , 1000)
                 clearInterval(intervalCycle);
-                readNumberToAudio('wynik');
-                console.log(tableNr);
             }
         }
 
@@ -182,6 +203,7 @@
             let tab = [];
             let nr = Math.abs(n);
             if (param == 'wynik') {
+
                 tab.push(nrToMp3('wynik'));
             }
             if (n == 0) tab.push(nrToMp3(0));
@@ -262,8 +284,9 @@
         function printNumber(e) {
             // c = e.keyCode;
             if (!semaphore) return;
-            buffer = 0;
-            is_minNumber = false;
+            buffer = 0
+            is_minNumber = false
+            is_bigFriends = false
             c = String.fromCharCode(e.keyCode);
             myTime = document.getElementById('tim1').value * 1000
             howmany = document.getElementById('howmany').value
@@ -279,10 +302,11 @@
                 printMe(9);
 
             }
-            else if (c == 'l' || c == 'L') {
+            else if (c == 'd' || c == 'D') {
                 // myTime = 4000;
                 // howmany = 4
-                printMe(49);
+                is_bigFriends = true
+                printMe(19);
             }
             else if (c == 'w' || c == 'W') {
                 // myTime = 4000;
@@ -293,7 +317,6 @@
                 printMe(11999);
             else if (c == 'r' || c == 'R') {
                 is_minNumber = true
-
                 printMe(choices);
             }
             else if (c == '1') {
@@ -318,13 +341,13 @@
     <div class="input-hidden" id='howmaner'>
         <label>
             Elementów:
-            <input type="number" class='tim' id="howmany" min="2" max="10" value="4">
+            <input type="number" class='tim' id="howmany" min="2" max="100" value="4">
         </label>
     </div>
     <div class="input-hidden" id='audios'>
         <label>
             Głośność:
-            <input type="number" class='tim' id="audio1" min="0" max="9" value="2">
+            <input type="number" class='tim' id="audio1" min="0" max="9" value="1">
         </label>
     </div>
     <div class="input-hidden" id='choices'>
@@ -339,8 +362,8 @@
             liczby jednocyfrowe
         </div>
         <div>
-            <div class="greater">l</div>
-            liczby do pięćdziesięciu
+            <div class="greater">d</div>
+            duzi przyjaciele
         </div>
         <div>
             <div class="greater">w</div>
